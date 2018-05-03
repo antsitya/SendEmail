@@ -16,22 +16,22 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
 /**
- * ÓÊ¼ş¹ÜÀíÆ÷
- * java ÊµÏÖÓÊ¼şµÄ·¢ËÍ£¬ ³­ËÍ¼°¶à¸½¼ş
+ * é‚®ä»¶ç®¡ç†å™¨
+ * java å®ç°é‚®ä»¶çš„å‘é€ï¼Œ æŠ„é€åŠå¤šé™„ä»¶
  * @author zhuxiongxian
  * @version 1.0
- * @created at 2016Äê10ÔÂ8ÈÕ ÏÂÎç3:52:11
+ * @created at 2016å¹´10æœˆ8æ—¥ ä¸‹åˆ3:52:11
  */
 public class EmailManager {
+    MyEmail my=new MyEmail();
+    public static String username = my.user; // æœåŠ¡é‚®ç®±(fromé‚®ç®±)
+    public static String password = my.pw; // é‚®ç®±å¯†ç 
+    public static String senderNick = my.nick;   // å‘ä»¶äººæ˜µç§°
 
-    public static String username = "antsitya@163.com"; // ·şÎñÓÊÏä(fromÓÊÏä)
-    public static String password = "shouquanma163"; // ÓÊÏäÃÜÂë
-    public static String senderNick = "ÖÇÒÏ¿Æ¼¼";   // ·¢¼şÈËêÇ³Æ
-
-    private Properties props; // ÏµÍ³ÊôĞÔ 
-    private Session session; // ÓÊ¼ş»á»°¶ÔÏó 
-    private MimeMessage mimeMsg; // MIMEÓÊ¼ş¶ÔÏó 
-    private Multipart mp;   // Multipart¶ÔÏó,ÓÊ¼şÄÚÈİ,±êÌâ,¸½¼şµÈÄÚÈİ¾ùÌí¼Óµ½ÆäÖĞºóÔÙÉú³ÉMimeMessage¶ÔÏó 
+    private Properties props; // ç³»ç»Ÿå±æ€§ 
+    private Session session; // é‚®ä»¶ä¼šè¯å¯¹è±¡ 
+    private MimeMessage mimeMsg; // MIMEé‚®ä»¶å¯¹è±¡ 
+    private Multipart mp;   // Multipartå¯¹è±¡,é‚®ä»¶å†…å®¹,æ ‡é¢˜,é™„ä»¶ç­‰å†…å®¹å‡æ·»åŠ åˆ°å…¶ä¸­åå†ç”ŸæˆMimeMessageå¯¹è±¡ 
 
     private static EmailManager instance = null; 
 
@@ -43,7 +43,7 @@ public class EmailManager {
         props.put("mail.smtp.port", "25");
         props.put("username", username);
         props.put("password", password);
-        // ½¨Á¢»á»°
+        // å»ºç«‹ä¼šè¯
         session = Session.getDefaultInstance(props);
         session.setDebug(false);
     }
@@ -56,13 +56,13 @@ public class EmailManager {
     }
 
     /**
-     * ·¢ËÍÓÊ¼ş
-     * @param from ·¢¼şÈË
-     * @param to ÊÕ¼şÈË
-     * @param copyto ³­ËÍ
-     * @param subject Ö÷Ìâ
-     * @param content ÄÚÈİ
-     * @param fileList ¸½¼şÁĞ±í
+     * å‘é€é‚®ä»¶
+     * @param from å‘ä»¶äºº
+     * @param to æ”¶ä»¶äºº
+     * @param copyto æŠ„é€
+     * @param subject ä¸»é¢˜
+     * @param content å†…å®¹
+     * @param fileList é™„ä»¶åˆ—è¡¨
      * @return
      */
     public boolean sendMail(String from, String[] to, String[] copyto, String subject, String content, String[] fileList) {
@@ -71,33 +71,33 @@ public class EmailManager {
             mimeMsg = new MimeMessage(session);
             mp = new MimeMultipart(); 
 
-            // ×Ô¶¨Òå·¢¼şÈËêÇ³Æ
+            // è‡ªå®šä¹‰å‘ä»¶äººæ˜µç§°
             String nick = "";
             try {
                 nick = javax.mail.internet.MimeUtility.encodeText(senderNick);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            // ÉèÖÃ·¢¼şÈË
+            // è®¾ç½®å‘ä»¶äºº
 //          mimeMsg.setFrom(new InternetAddress(from));
             mimeMsg.setFrom(new InternetAddress(from, nick));
-            // ÉèÖÃÊÕ¼şÈË
+            // è®¾ç½®æ”¶ä»¶äºº
             if (to != null && to.length > 0) {
                 String toListStr = getMailList(to);
                 mimeMsg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toListStr));
             }
-            // ÉèÖÃ³­ËÍÈË
+            // è®¾ç½®æŠ„é€äºº
             if (copyto != null && copyto.length > 0) {
                 String ccListStr = getMailList(copyto);
                 mimeMsg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(ccListStr)); 
             }
-            // ÉèÖÃÖ÷Ìâ
+            // è®¾ç½®ä¸»é¢˜
             mimeMsg.setSubject(subject);
-            // ÉèÖÃÕıÎÄ
+            // è®¾ç½®æ­£æ–‡
             BodyPart bp = new MimeBodyPart(); 
             bp.setContent(content, "text/html;charset=utf-8");
             mp.addBodyPart(bp);
-            // ÉèÖÃ¸½¼ş
+            // è®¾ç½®é™„ä»¶
             if (fileList != null && fileList.length > 0) {
                 for (int i = 0; i < fileList.length; i++) {
                     bp = new MimeBodyPart();
@@ -109,7 +109,7 @@ public class EmailManager {
             }
             mimeMsg.setContent(mp); 
             mimeMsg.saveChanges(); 
-            // ·¢ËÍÓÊ¼ş
+            // å‘é€é‚®ä»¶
             if (props.get("mail.smtp.auth").equals("true")) {
                 Transport transport = session.getTransport("smtp"); 
                 transport.connect((String)props.get("smtp.163.com"),(String)props.get("username"), (String)props.get("password")); 
@@ -118,7 +118,7 @@ public class EmailManager {
             } else {
                 Transport.send(mimeMsg);
             }
-            System.out.println("ÓÊ¼ş·¢ËÍ³É¹¦");
+            System.out.println("é‚®ä»¶å‘é€æˆåŠŸ");
         } catch (MessagingException e) {
             e.printStackTrace();
             success = false;
@@ -130,13 +130,13 @@ public class EmailManager {
     }
 
     /**
-     * ·¢ËÍÓÊ¼ş
-     * @param from ·¢¼şÈË
-     * @param to ÊÕ¼şÈË, ¶à¸öEmailÒÔÓ¢ÎÄ¶ººÅ·Ö¸ô
-     * @param cc ³­ËÍ, ¶à¸öEmailÒÔÓ¢ÎÄ¶ººÅ·Ö¸ô
-     * @param subject Ö÷Ìâ
-     * @param content ÄÚÈİ
-     * @param fileList ¸½¼şÁĞ±í
+     * å‘é€é‚®ä»¶
+     * @param from å‘ä»¶äºº
+     * @param to æ”¶ä»¶äºº, å¤šä¸ªEmailä»¥è‹±æ–‡é€—å·åˆ†éš”
+     * @param cc æŠ„é€, å¤šä¸ªEmailä»¥è‹±æ–‡é€—å·åˆ†éš”
+     * @param subject ä¸»é¢˜
+     * @param content å†…å®¹
+     * @param fileList é™„ä»¶åˆ—è¡¨
      * @return
      */
     public boolean sendMail(String from, String to, String cc, String subject, String content, String[] fileList) {
@@ -145,31 +145,31 @@ public class EmailManager {
             mimeMsg = new MimeMessage(session);
             mp = new MimeMultipart(); 
 
-            // ×Ô¶¨Òå·¢¼şÈËêÇ³Æ
+            // è‡ªå®šä¹‰å‘ä»¶äººæ˜µç§°
             String nick = "";
             try {
                 nick = javax.mail.internet.MimeUtility.encodeText(senderNick);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            // ÉèÖÃ·¢¼şÈË
+            // è®¾ç½®å‘ä»¶äºº
 //          mimeMsg.setFrom(new InternetAddress(from));
             mimeMsg.setFrom(new InternetAddress(from, nick));
-            // ÉèÖÃÊÕ¼şÈË
+            // è®¾ç½®æ”¶ä»¶äºº
             if (to != null && to.length() > 0) {
                 mimeMsg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             }
-            // ÉèÖÃ³­ËÍÈË
+            // è®¾ç½®æŠ„é€äºº
             if (cc != null && cc.length() > 0) {
                 mimeMsg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(cc)); 
             }
-            // ÉèÖÃÖ÷Ìâ
+            // è®¾ç½®ä¸»é¢˜
             mimeMsg.setSubject(subject);
-            // ÉèÖÃÕıÎÄ
+            // è®¾ç½®æ­£æ–‡
             BodyPart bp = new MimeBodyPart(); 
             bp.setContent(content, "text/html;charset=utf-8");
             mp.addBodyPart(bp);
-            // ÉèÖÃ¸½¼ş
+            // è®¾ç½®é™„ä»¶
             if (fileList != null && fileList.length > 0) {
                 for (int i = 0; i < fileList.length; i++) {
                     bp = new MimeBodyPart();
@@ -181,7 +181,7 @@ public class EmailManager {
             }
             mimeMsg.setContent(mp); 
             mimeMsg.saveChanges(); 
-            // ·¢ËÍÓÊ¼ş
+            // å‘é€é‚®ä»¶
             if (props.get("mail.smtp.auth").equals("true")) {
                 Transport transport = session.getTransport("smtp"); 
                 transport.connect((String)props.get("smtp.163.com"), (String)props.get("username"), (String)props.get("password")); 
@@ -190,7 +190,7 @@ public class EmailManager {
             } else {
                 Transport.send(mimeMsg);
             }
-            System.out.println("ÓÊ¼ş·¢ËÍ³É¹¦");
+            System.out.println("é‚®ä»¶å‘é€æˆåŠŸ");
         } catch (MessagingException e) {
             e.printStackTrace();
             success = false;
@@ -220,12 +220,12 @@ public class EmailManager {
 
     public static void main(String[] args) {
         String from = username;
-        String[] to = {"2811259714@qq.com"};
-        String[] copyto = {"antsitya@qq.com"};
-        String subject = "<h2>¹ş¹ş¹ş</h2>";
-        String content = "<strong>ÄãºÃÑ½£¡</strong>";
+        String[] to = {"******@qq.com"};
+        String[] copyto = {"*****@qq.com"};
+        String subject = "<h2>å“ˆå“ˆå“ˆ</h2>";
+        String content = "<strong>ä½ å¥½å‘€ï¼</strong>";
         String[] fileList = new String[1];
-        fileList[0] = "g:/×ÊÁÏ.txt";
+        fileList[0] = "g:/èµ„æ–™.txt";
         EmailManager.getInstance().sendMail(from, to, copyto, subject, content, fileList);
     }
 }
