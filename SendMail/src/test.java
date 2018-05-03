@@ -16,10 +16,10 @@ public class test {
    * @param args 
    * @throws MessagingException 
    * @throws UnsupportedEncodingException 
-   * @param my.user ·¢ËÍ·½µÄÓÊÏä
-   * @param my.pw ·¢ËÍÓÊÏäµÄÊÚÈ¨Âë
-   * @param my.title ·¢ËÍ·½µÄêÇ³Æ
-   * @param to ½ÓÊÕ·½ÓÊÏä
+   * @param my.user å‘é€æ–¹çš„é‚®ç®±
+   * @param my.pw å‘é€é‚®ç®±çš„æˆæƒç 
+   * @param my.title å‘é€æ–¹çš„æ˜µç§°
+   * @param to æ¥æ”¶æ–¹é‚®ç®±
    */ 
   public static void main(String[] args) throws MessagingException, UnsupportedEncodingException { 
     MyEmail my=new MyEmail();
@@ -30,14 +30,14 @@ public class test {
     Session session = Session.getInstance(props);  
     session.setDebug(true);
     Message msg = new MimeMessage(session);  
-    msg.setText("ÕâÊÇÄÚÈİ");  
+    msg.setText("è¿™æ˜¯å†…å®¹");  
     try {
-        msg.setFrom(new InternetAddress("antsitya@163.com",javax.mail.internet.MimeUtility.encodeText(my.title)));
+        msg.setFrom(new InternetAddress(my.user,javax.mail.internet.MimeUtility.encodeText(my.nick)));
     } catch (Exception e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
     }  
-    msg.setSubject("ÕâÊÇ±êÌâ");
+    msg.setSubject("è¿™æ˜¯æ ‡é¢˜");
     Transport transport = session.getTransport();  
     transport.connect("smtp.163.com",25,my.user,my.pw);  
     transport.sendMessage(msg,  
